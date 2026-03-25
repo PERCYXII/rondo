@@ -41,6 +41,9 @@ const CCTV_IMG = "/cctv.jpg";
 const SERVER_IMG = "/server.jpg";
 const INFRA_IMG = "/infra.jpg";
 const AV_IMG = "/av.jpg";
+const HDA_IMG = "/hda.jpg";
+const NHLS_IMG = "/nhls.jpg";
+const WATER_IMG = "/water.jpg";
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -585,7 +588,7 @@ export default function App() {
                   status: "Completed",
                   outcome:
                     "Successful advertising campaign for housing beneficiaries.",
-                  img: HERO_IMG,
+                  img: HDA_IMG,
                 },
                 {
                   client: "HDA (Durban)",
@@ -593,7 +596,7 @@ export default function App() {
                   duration: "Project Based",
                   status: "Completed",
                   outcome: "High-quality AV installation for regional office.",
-                  img: AV_IMG,
+                  img: HDA_IMG,
                 },
                 {
                   client: "HDA (Head Office)",
@@ -601,7 +604,7 @@ export default function App() {
                   duration: "Project Based",
                   status: "In Progress",
                   outcome: "Ongoing delivery of high-end IT hardware.",
-                  img: SERVER_IMG,
+                  img: HDA_IMG,
                 },
                 {
                   client: "HDA (North West)",
@@ -609,7 +612,7 @@ export default function App() {
                   duration: "Project Based",
                   status: "On Hold",
                   outcome: "Pending further regulatory approvals.",
-                  img: INFRA_IMG,
+                  img: HDA_IMG,
                 },
                 {
                   client: "NHLS",
@@ -617,7 +620,7 @@ export default function App() {
                   duration: "Ongoing",
                   status: "In Progress",
                   outcome: "Continuous recruitment and vacancy advertising.",
-                  img: HERO_IMG,
+                  img: NHLS_IMG,
                 },
                 {
                   client: "Dept. of Water & Sanitation",
@@ -625,7 +628,7 @@ export default function App() {
                   duration: "Project Based",
                   status: "Completed",
                   outcome: "Advanced security monitoring for critical sites.",
-                  img: CCTV_IMG,
+                  img: WATER_IMG,
                 },
               ].map((project, i) => (
                 <motion.div
@@ -646,7 +649,7 @@ export default function App() {
                     <img
                       src={project.img}
                       alt={project.client}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-contain p-8 bg-white border-2 border-gray-100 group-hover:scale-110 transition-transform duration-700"
                       referrerPolicy="no-referrer"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
@@ -775,6 +778,21 @@ export default function App() {
                         Visit Us
                       </p>
                       <p className="text-lg leading-tight mt-1 font-bold">Unit 979 Greencreek, Riverwalk Estate, Silver Lakes, Pretoria</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6 items-start">
+                    <div className="bg-light-grey p-4 rounded-2xl text-teal">
+                      <Users size={24} />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 font-bold uppercase tracking-tighter mb-1">
+                        Director & Founder
+                      </p>
+                      <p className="text-xl font-bold">Rokhethwa Ndouvhada</p>
+                      <div className="text-sm mt-1 text-gray-500 font-medium">
+                        <p>Rokhethwan@rondoitbs.co.za</p>
+                        <p>073 385 8066</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1017,7 +1035,7 @@ export default function App() {
       {/* --- Footer --- */}
       <footer className="bg-navy text-white pt-20 pb-10">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-20">
+          <div className="grid md:grid-cols-5 gap-12 mb-20">
             <div className="col-span-2">
               <img
                 src={LOGO}
@@ -1119,6 +1137,17 @@ export default function App() {
                   </a>
                 </li>
               </ul>
+            </div>
+            <div>
+              <h5 className="font-bold mb-6">Contact Info</h5>
+              <div className="space-y-2 text-gray-400 text-sm">
+                <p className="text-white font-bold text-base">Rokhethwa Ndouvhada</p>
+                <p className="text-teal font-medium">Director & Founder</p>
+                <div className="pt-2">
+                  <p>Rokhethwan@rondoitbs.co.za</p>
+                  <p>073 385 8066</p>
+                </div>
+              </div>
             </div>
           </div>
           <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-500 uppercase tracking-widest">
