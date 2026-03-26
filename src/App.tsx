@@ -815,7 +815,7 @@ export default function App() {
                   scope: "Township Establishment Advertising",
                   duration: "Project Based",
                   status: "Completed",
-                  outcome: "Pending further regulatory approvals.",
+                  outcome: "All 7  local newspaper and Government gazette were approved.",
                   img: HDA_IMG,
                 },
                 {
