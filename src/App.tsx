@@ -872,7 +872,7 @@ export default function App() {
                 <motion.div
                   key={i}
                   whileHover={{ scale: 1.1 }}
-                  className="bg-white px-10 py-6 rounded-2xl shadow-sm font-black text-2xl text-navy italic cursor-default transition-all duration-300 flex items-center justify-center min-w-[240px] h-[120px]"
+                  className="bg-white px-10 py-6 rounded-2xl shadow-sm font-black text-2xl text-navy italic cursor-default transition-all duration-300 flex items-center justify-center min-w-[336px] h-[168px]"
                 >
                   {client.logo ? (
                     <img
