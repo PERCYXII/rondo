@@ -35,8 +35,15 @@ import {
 } from "lucide-react";
 
 // --- Assets ---
-const LOGO = "/logo.png";
-const HERO_IMG = "/hero.jpg";
+const LOGO = "../logo.png ";
+const HERO_IMAGES = [
+  "/img1 (1).png",
+  "/img1 (2).png",
+  "/img1 (3).png",
+  "/img1 (4).png",
+  "/img1 (5).png",
+  "/img1 (6).png",
+];
 const CCTV_IMG = "/cctv.jpg";
 const SERVER_IMG = "/server.jpg";
 const INFRA_IMG = "/infra.jpg";
@@ -45,9 +52,177 @@ const HDA_IMG = "/hda.jpg";
 const NHLS_IMG = "/nhls.jpg";
 const WATER_IMG = "/water.jpg";
 
+const ProjectCard: React.FC<{ project: any; index: number }> = ({ project, index }) => {
+  const [currentImg, setCurrentImg] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const images = project.images || [project.img];
+
+  const isVideo = (src: string) => /\.(mp4|webm|ogg)$/i.test(src);
+
+  useEffect(() => {
+    if (images.length > 1 && !isZoomed) {
+      const interval = setInterval(() => {
+        setCurrentImg((prev) => (prev + 1) % images.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [images.length, isZoomed]);
+
+  useEffect(() => {
+    if (isZoomed) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isZoomed]);
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, rotateY: 90 }}
+        whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+        viewport={{ once: true }}
+        transition={{
+          delay: index * 0.2,
+          duration: 0.8,
+          type: "spring",
+          stiffness: 100,
+        }}
+        whileHover={{ rotateY: 5, scale: 1.02 }}
+        className="group cursor-pointer perspective-1000"
+        onClick={() => setIsZoomed(true)}
+      >
+        <div className="relative h-64 rounded-3xl overflow-hidden mb-6">
+          <AnimatePresence mode="popLayout">
+            {isVideo(images[currentImg]) ? (
+              <motion.video
+                key={currentImg}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                src={images[currentImg]}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover bg-white group-hover:scale-110 transition-transform duration-700"
+              />
+            ) : (
+              <motion.img
+                key={currentImg}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                src={images[currentImg]}
+                alt={project.client}
+                className="absolute inset-0 w-full h-full object-cover bg-white group-hover:scale-110 transition-transform duration-700"
+                referrerPolicy="no-referrer"
+              />
+            )}
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
+            <p className="text-white font-bold flex items-center gap-2">
+              <Search size={18} /> Click to View
+            </p>
+          </div>
+        </div>
+        <h4 className="text-2xl font-bold mb-2">{project.client}</h4>
+        <p className="text-teal font-semibold text-sm mb-4">
+          {project.scope}
+        </p>
+        <div className="space-y-2 text-sm text-gray-600">
+          <p>
+            <span className="font-bold text-navy">Duration:</span>{" "}
+            {project.duration}
+          </p>
+          <p>
+            <span className="font-bold text-navy">
+              Project Status:
+            </span>{" "}
+            {project.status}
+          </p>
+          <p>
+            <span className="font-bold text-navy">Outcome:</span>{" "}
+            {project.outcome}
+          </p>
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {isZoomed && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-[110px] md:top-[130px] bottom-0 left-0 right-0 z-40 flex items-center justify-center p-4 sm:p-10 cursor-zoom-out before:absolute before:inset-0 before:bg-navy/95 before:backdrop-blur-xl"
+            onClick={() => setIsZoomed(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative z-10 w-full max-w-6xl max-h-full flex items-center justify-center overflow-hidden"
+            >
+              {images.length > 1 && (
+                <div className="absolute top-4 left-4 bg-black/50 text-white px-4 py-1.5 rounded-full text-sm font-medium z-20 shadow-lg backdrop-blur-md border border-white/10">
+                  {currentImg + 1} / {images.length}
+                </div>
+              )}
+              {isVideo(images[currentImg]) ? (
+                <video
+                  src={images[currentImg]}
+                  controls
+                  autoPlay
+                  className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl cursor-pointer"
+                  onClick={(e) => {
+                    if (images.length > 1) {
+                      e.stopPropagation();
+                      setCurrentImg((prev) => (prev + 1) % images.length);
+                    }
+                  }}
+                />
+              ) : (
+                <img
+                  src={images[currentImg]}
+                  alt={project.client}
+                  className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl cursor-pointer"
+                  onClick={(e) => {
+                    if (images.length > 1) {
+                      e.stopPropagation();
+                      setCurrentImg((prev) => (prev + 1) % images.length);
+                    }
+                  }}
+                />
+              )}
+              {images.length > 1 && (
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 text-white px-6 py-2.5 rounded-full text-sm font-medium backdrop-blur-md pointer-events-none opacity-80 shadow-xl border border-white/10">
+                  Click media for next
+                </div>
+              )}
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsZoomed(false); }} 
+                className="absolute top-4 right-4 bg-white/10 text-white p-3 rounded-full hover:bg-teal hover:text-white transition-colors z-20 shadow-lg backdrop-blur-md border border-white/20" 
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [heroImgIndex, setHeroImgIndex] = useState(0);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -115,6 +290,14 @@ export default function App() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Automatically rotate hero images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroImgIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const navLinks = [
@@ -214,14 +397,21 @@ export default function App() {
           className="relative min-h-[60vh] flex items-center overflow-hidden pt-4 pb-4"
         >
           {/* Background Image */}
-          <div className="absolute inset-0 z-0">
-            <img
-              src={HERO_IMG}
-              alt="Rondo IT Background"
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/60 to-navy/20" />
+          <div className="absolute inset-0 z-0 bg-navy overflow-hidden">
+            <AnimatePresence>
+              <motion.img
+                key={heroImgIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                src={HERO_IMAGES[heroImgIndex]}
+                alt="Rondo IT Background"
+                className="absolute inset-0 w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/60 to-navy/20 pointer-events-none" />
           </div>
 
           <div className="container mx-auto px-6 relative z-10">
@@ -597,6 +787,13 @@ export default function App() {
                   status: "Completed",
                   outcome: "High-quality AV installation for regional office.",
                   img: HDA_IMG,
+                  images: [
+                    "/WhatsApp Video 2026-03-26 at 19.45.21.mp4",
+                    HDA_IMG,
+                    "/WhatsApp Image 2026-03-25 at 17.51.03 (1).jpeg",
+                    "/WhatsApp Image 2026-03-25 at 17.51.03 (2).jpeg",
+                    "/WhatsApp Image 2026-03-25 at 17.51.03 (3).jpeg"
+                  ],
                 },
                 {
                   client: "HDA (Head Office)",
@@ -629,54 +826,20 @@ export default function App() {
                   status: "Completed",
                   outcome: "Advanced security monitoring for critical sites.",
                   img: WATER_IMG,
+                  images: [
+                    "/WhatsApp Video 2026-03-26 at 19.44.04.mp4",
+                    "/WhatsApp Video 2026-03-26 at 19.45.16.mp4",
+                    WATER_IMG,
+                    
+                    "/WhatsApp Image 2026-03-25 at 17.51.43 (1).jpeg",
+                    "/WhatsApp Image 2026-03-25 at 17.51.43 (2) - Copy.jpeg",
+                    "/WhatsApp Image 2026-03-25 at 17.51.44.jpeg",
+                    "/WhatsApp Image 2026-03-25 at 17.51.45 - Copy.jpeg",
+                    "/WhatsApp Image 2026-03-25 at 17.51.45 (1) - Copy.jpeg"
+                  ],
                 },
               ].map((project, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8, rotateY: 90 }}
-                  whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: i * 0.2,
-                    duration: 0.8,
-                    type: "spring",
-                    stiffness: 100,
-                  }}
-                  whileHover={{ rotateY: 5, scale: 1.02 }}
-                  className="group cursor-pointer perspective-1000"
-                >
-                  <div className="relative h-64 rounded-3xl overflow-hidden mb-6">
-                    <img
-                      src={project.img}
-                      alt={project.client}
-                      className="w-full h-full object-contain p-8 bg-white border-2 border-gray-100 group-hover:scale-110 transition-transform duration-700"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-                      <p className="text-white font-bold">View Case Study</p>
-                    </div>
-                  </div>
-                  <h4 className="text-2xl font-bold mb-2">{project.client}</h4>
-                  <p className="text-teal font-semibold text-sm mb-4">
-                    {project.scope}
-                  </p>
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <p>
-                      <span className="font-bold text-navy">Duration:</span>{" "}
-                      {project.duration}
-                    </p>
-                    <p>
-                      <span className="font-bold text-navy">
-                        Project Status:
-                      </span>{" "}
-                      {project.status}
-                    </p>
-                    <p>
-                      <span className="font-bold text-navy">Outcome:</span>{" "}
-                      {project.outcome}
-                    </p>
-                  </div>
-                </motion.div>
+                <ProjectCard key={i} project={project} index={i} />
               ))}
             </div>
           </div>
@@ -693,13 +856,16 @@ export default function App() {
             <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center">
               {[
                 { name: "Rondo Group", logo: LOGO },
-                { name: "Kapi Projects", logo: "/kapi.png" },
-                { name: "Mauda BEC", logo: "/mauda.jpg" },
+                { name: "Kapi Projects", logo: "/kapi-logo.png" },
+                { name: "Mauda BEC", logo: "/mauda-bec-logo.jpg" },
+                { name: "Dept. of Water & Sanitation", logo: WATER_IMG },
+                { name: "NHLS", logo: NHLS_IMG },
+                { name: "HDA", logo: HDA_IMG },
               ].map((client, i) => (
                 <motion.div
                   key={i}
                   whileHover={{ scale: 1.1 }}
-                  className="bg-white px-10 py-6 rounded-2xl shadow-sm font-black text-2xl text-navy italic cursor-default grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300 flex items-center justify-center min-w-[240px] h-[120px]"
+                  className="bg-white px-10 py-6 rounded-2xl shadow-sm font-black text-2xl text-navy italic cursor-default transition-all duration-300 flex items-center justify-center min-w-[240px] h-[120px]"
                 >
                   {client.logo ? (
                     <img
