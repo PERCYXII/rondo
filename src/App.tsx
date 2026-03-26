@@ -254,10 +254,17 @@ export default function App() {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    // Construct email content
+    const subject = encodeURIComponent(`Website Inquiry: ${formData.subject}`);
+    const body = encodeURIComponent(`Name: ${formData.fullName}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+    
+    // Open default email client
+    window.location.href = `mailto:info@rondoitbs.co.za?subject=${subject}&body=${body}`;
+
     setIsSubmitting(false);
     setIsSuccess(true);
+    
     setFormData({
       fullName: "",
       email: "",
@@ -855,7 +862,7 @@ export default function App() {
             </div>
             <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center">
               {[
-                { name: "Rondo Group", logo: LOGO },
+                { name: "Rondo Group", logo: "/rondo-group-logo.jpeg" },
                 { name: "Kapi Projects", logo: "/kapi-logo.png" },
                 { name: "Mauda BEC", logo: "/mauda-bec-logo.jpg" },
                 { name: "Dept. of Water & Sanitation", logo: WATER_IMG },
@@ -921,7 +928,9 @@ export default function App() {
                       <p className="text-sm text-gray-500 font-bold uppercase tracking-tighter mb-1">
                         Call Us
                       </p>
-                      <p className="text-xl font-bold">073 385 8066</p>
+                      <p className="text-xl font-bold">
+                        <a href="tel:+27733858066" className="hover:text-teal transition-colors">073 385 8066</a>
+                      </p>
                     </div>
                   </div>
                   <div className="flex gap-6 items-start">
@@ -932,7 +941,9 @@ export default function App() {
                       <p className="text-sm text-gray-500 font-bold uppercase tracking-tighter mb-1">
                         Email Us
                       </p>
-                      <p className="text-xl font-bold">info@rondoitbs.co.za</p>
+                      <p className="text-xl font-bold">
+                        <a href="mailto:info@rondoitbs.co.za" className="hover:text-teal transition-colors">info@rondoitbs.co.za</a>
+                      </p>
                     </div>
                   </div>
                   <div className="flex gap-6 items-start">
@@ -1310,8 +1321,12 @@ export default function App() {
                 <p className="text-white font-bold text-base">Rokhethwa Ndouvhada</p>
                 <p className="text-teal font-medium">Director & Founder</p>
                 <div className="pt-2">
-                  <p>Rokhethwan@rondoitbs.co.za</p>
-                  <p>073 385 8066</p>
+                  <p>
+                    <a href="mailto:info@rondoitbs.co.za" className="hover:text-teal transition-colors">info@rondoitbs.co.za</a>
+                  </p>
+                  <p>
+                    <a href="tel:+27733858066" className="hover:text-teal transition-colors">073 385 8066</a>
+                  </p>
                 </div>
               </div>
             </div>
