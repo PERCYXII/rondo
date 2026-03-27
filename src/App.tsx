@@ -862,6 +862,9 @@ export default function App() {
             </div>
             <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center">
               {[
+                { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.24.40.jpeg" },
+                { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.21.39.jpeg" },
+                { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.21.17.jpeg" },
                 { name: "Rondo Group", logo: "/rondo-group-logo.jpeg" },
                 { name: "Kapi Projects", logo: "/kapi-logo.png" },
                 { name: "Mauda BEC", logo: "/mauda-bec-logo.jpg" },
