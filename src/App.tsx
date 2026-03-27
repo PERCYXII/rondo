@@ -219,10 +219,21 @@ const ProjectCard: React.FC<{ project: any; index: number }> = ({ project, index
   );
 };
 
+const navLinks = [
+  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
+  { name: "Services", href: "#services" },
+  { name: "Projects", href: "#projects" },
+  { name: "Location", href: "#location" },
+  { name: "Contact", href: "#contact" },
+];
+
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const [heroImgIndex, setHeroImgIndex] = useState(0);
+  const [activeSection, setActiveSection] = useState("home");
 
   // Form State
   const [formData, setFormData] = useState({
@@ -294,10 +305,58 @@ export default function App() {
   };
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    let scrollTimeout: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+      setIsScrolling(true);
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+      
+      const sections = navLinks.map(link => link.href.substring(1));
+      let current = "home";
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Trigger transition when a section takes up roughly the middle of the screen
+          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+            current = section;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    handleScroll(); // Execute once to set initial state correctly on load
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
   }, []);
+
+  const getBackgroundStyle = () => {
+    switch (activeSection) {
+      case "home":
+        return "opacity-[0.03] blur-3xl scale-110";
+      case "about":
+        return "opacity-[0.06] blur-sm scale-100 grayscale";
+      case "services":
+        return "opacity-[0.04] blur-md scale-105";
+      case "projects":
+        return "opacity-[0.08] blur-[2px] scale-100";
+      case "location":
+        return "opacity-[0.05] blur-lg scale-110 grayscale";
+      case "contact":
+        return "opacity-[0.1] blur-none scale-100";
+      default:
+        return "opacity-[0.05] blur-md scale-100";
+    }
+  };
 
   // Automatically rotate hero images
   useEffect(() => {
@@ -307,23 +366,27 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Services", href: "#services" },
-    { name: "Projects", href: "#projects" },
-    { name: "Location", href: "#location" },
-    { name: "Contact", href: "#contact" },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-white text-navy selection:bg-teal selection:text-white">
+    <div className="min-h-screen flex flex-col bg-transparent text-navy selection:bg-teal selection:text-white relative">
+      
+      {/* Sticky Background Logo */}
+      <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center overflow-hidden mix-blend-multiply">
+        <img
+          src="/logo.png"
+          alt="Background Overlay"
+          className={`w-[80vw] md:w-[60vw] max-w-[800px] object-contain transition-all duration-[1200ms] ease-in-out ${getBackgroundStyle()}`}
+          referrerPolicy="no-referrer"
+        />
+      </div>
+
       {/* --- Navigation --- */}
       <nav
-        className={`sticky top-0 w-full z-50 transition-all duration-300 border-b border-gray-100 ${
-          scrolled
-            ? "bg-white/90 backdrop-blur-md shadow-md"
-            : "bg-white shadow-sm"
+        className={`sticky top-0 w-full z-50 transition-all duration-300 border-b ${
+          !scrolled 
+            ? "bg-white border-gray-100 shadow-sm"
+            : isScrolling
+              ? "bg-transparent backdrop-blur-md border-transparent shadow-sm"
+              : "bg-white/95 backdrop-blur-md border-gray-100 shadow-md"
         }`}
       >
         <div className="container mx-auto px-6 flex justify-between items-center">
@@ -860,34 +923,43 @@ export default function App() {
                 Ongoing Clients & Contracts
               </h3>
             </div>
-            <div className="flex flex-wrap justify-center gap-8 md:gap-16 items-center">
-              {[
-                { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.24.40.jpeg" },
-                { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.21.39.jpeg" },
-                { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.21.17.jpeg" },
-                { name: "Rondo Group", logo: "/rondo-group-logo.jpeg" },
-                { name: "Kapi Projects", logo: "/kapi-logo.png" },
-                { name: "Mauda BEC", logo: "/mauda-bec-logo.jpg" },
-                { name: "Dept. of Water & Sanitation", logo: WATER_IMG },
-                { name: "NHLS", logo: NHLS_IMG },
-                { name: "HDA", logo: HDA_IMG },
-              ].map((client, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ scale: 1.1 }}
-                  className="bg-white px-10 py-6 rounded-2xl shadow-sm font-black text-2xl text-navy italic cursor-default transition-all duration-300 flex items-center justify-center min-w-[336px] h-[168px]"
-                >
-                  {client.logo ? (
-                    <img
-                      src={client.logo}
-                      alt={client.name}
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  ) : (
-                    client.name
-                  )}
-                </motion.div>
-              ))}
+            <div className="w-full relative overflow-hidden py-4 group">
+              {/* Fade masks */}
+              <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-light-grey to-transparent z-10 pointer-events-none"></div>
+              <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-light-grey to-transparent z-10 pointer-events-none"></div>
+
+              <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+                {[...Array(2)].map((_, arrayIndex) => (
+                  <div key={arrayIndex} className="flex gap-8 md:gap-16 items-center pr-8 md:pr-16">
+                    {[
+                      { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.24.40.jpeg" },
+                      { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.21.39.jpeg" },
+                      { name: "Client Partner", logo: "/WhatsApp Image 2026-03-27 at 11.21.17.jpeg" },
+                      { name: "Rondo Group", logo: "/rondo-group-logo.jpeg" },
+                      { name: "Kapi Projects", logo: "/kapi-logo.png" },
+                      { name: "Mauda BEC", logo: "/mauda-bec-logo.jpg" },
+                      { name: "Dept. of Water & Sanitation", logo: WATER_IMG },
+                      { name: "NHLS", logo: NHLS_IMG },
+                      { name: "HDA", logo: HDA_IMG },
+                    ].map((client, i) => (
+                      <div
+                        key={`${arrayIndex}-${i}`}
+                        className="bg-white px-10 py-6 rounded-2xl shadow-sm font-black text-2xl text-navy italic cursor-default transition-all duration-300 flex items-center justify-center min-w-[280px] md:min-w-[336px] h-[168px] hover:scale-105"
+                      >
+                        {client.logo ? (
+                          <img
+                            src={client.logo}
+                            alt={client.name}
+                            className="max-h-full max-w-full object-contain mix-blend-multiply"
+                          />
+                        ) : (
+                          client.name
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="mt-16 text-center">
               <p className="text-gray-500 flex items-center justify-center gap-2">
