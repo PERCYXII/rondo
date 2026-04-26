@@ -60,6 +60,12 @@ const ProjectCard: React.FC<{ project: any; index: number }> = ({ project, index
   const isVideo = (src: string) => /\.(mp4|webm|ogg)$/i.test(src);
 
   useEffect(() => {
+    const handleClose = () => setIsZoomed(false);
+    window.addEventListener('closePreview', handleClose);
+    return () => window.removeEventListener('closePreview', handleClose);
+  }, []);
+
+  useEffect(() => {
     if (images.length > 1 && !isZoomed) {
       const interval = setInterval(() => {
         setCurrentImg((prev) => (prev + 1) % images.length);
@@ -757,17 +763,17 @@ export default function App() {
                       desc: "Advertising and media placement.",
                     },
                     {
-                      title: "Gazette Pubs",
+                      title: "Gazette Publications",
                       icon: <FileText />,
                       desc: "Public notices and government gazette publications.",
                     },
                     {
-                      title: "Recruitment Ads",
+                      title: "Recruitment Advertisements",
                       icon: <Search />,
                       desc: "Recruitment and vacancy advertising.",
                     },
                     {
-                      title: "Project Comms",
+                      title: "Project Communications",
                       icon: <MessageSquare />,
                       desc: "Project support and communication services.",
                     },
@@ -841,6 +847,25 @@ export default function App() {
 
             <div className="grid lg:grid-cols-3 gap-8">
               {[
+                {
+                  client: "Residential Client (Madabani, Sinthumule Limpopo)",
+                  scope: "CCTV & Solar Lights Installation",
+                  duration: "Project Based",
+                  status: "Completed",
+                  outcome: "Enhanced residential security and off-grid lighting.",
+                  img: "/WhatsApp Image 2026-04-26 at 13.54.08.jpeg",
+                  images: [
+                    "/WhatsApp Video 2026-04-26 at 10.09.04.mp4",
+                    "/WhatsApp Image 2026-04-26 at 10.09.01.jpeg",
+                    "/WhatsApp Image 2026-04-26 at 13.54.08 (1).jpeg",
+                    "/WhatsApp Image 2026-04-26 at 13.54.08.jpeg",
+                    "/WhatsApp Image 2026-04-26 at 13.54.09.jpeg",
+                    "/WhatsApp Image 2026-04-26 at 13.54.10 (1).jpeg",
+                    "/WhatsApp Image 2026-04-26 at 13.54.10.jpeg",
+                    "/WhatsApp Image 2026-04-26 at 14.24.26.jpeg",
+                    "/WhatsApp Video 2026-04-26 at 10.09.04 (1).mp4"
+                  ],
+                },
                 {
                   client: "HDA (Western Cape)",
                   scope: "Advertising of Housing Beneficiaries",
@@ -1029,7 +1054,7 @@ export default function App() {
                       <p className="text-sm text-gray-500 font-bold uppercase tracking-tighter mb-1">
                         Visit Us
                       </p>
-                      <p className="text-lg leading-tight mt-1 font-bold">Unit 979 Greencreek, Riverwalk Estate, Silver Lakes, Pretoria</p>
+                      <p className="text-lg leading-tight mt-1 font-bold">Block N1, 107 Boardwalk Blvd, Faerie Glen, Pretoria, 0081</p>
                     </div>
                   </div>
                   <div className="flex gap-6 items-start">
@@ -1235,10 +1260,10 @@ export default function App() {
                     <div>
                       <h4 className="text-xl font-bold mb-2">Headquarters</h4>
                       <p className="text-gray-600">
-                        Unit 979 Greencreek, Riverwalk Estate
+                        Block N1, 107 Boardwalk Blvd
                       </p>
                       <p className="text-gray-600">
-                        Silver Lakes, Pretoria
+                        Faerie Glen, Pretoria, 0081
                       </p>
                     </div>
                   </div>
@@ -1268,7 +1293,7 @@ export default function App() {
                 className="lg:w-1/2 w-full h-[600px] rounded-[40px] overflow-hidden shadow-2xl relative group"
               >
                 <iframe
-                  src="https://maps.google.com/maps?width=600&height=400&hl=en&q=Rondo IT and Business Solutions is a dynamic and innovative service provider specializing in Information Technology services and integrated Business Solutions. The company is committed to delivering high-quality, efficient, and cost-effective solutions tailored to meet the evolving needs of both public and private sector clients.  With a strong focus on professionalism, reliability, and client satisfaction, Rondo IT and Business Solutions has established itself as a trusted partner in delivering impactful projects across various industries.&t=&z=14&ie=UTF8&iwloc=B&output=embed"
+                  src="https://maps.google.com/maps?width=600&height=400&hl=en&q=Block N1, 107 Boardwalk Blvd, Faerie Glen, Pretoria, 0081&t=&z=14&ie=UTF8&iwloc=B&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
