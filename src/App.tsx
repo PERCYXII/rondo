@@ -411,6 +411,7 @@ export default function App() {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={() => window.dispatchEvent(new Event('closePreview'))}
                 className="text-sm font-medium hover:text-teal transition-colors"
               >
                 {link.name}
@@ -418,6 +419,7 @@ export default function App() {
             ))}
             <a
               href="#contact"
+              onClick={() => window.dispatchEvent(new Event('closePreview'))}
               className="bg-navy text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-teal transition-all duration-300 shadow-lg shadow-navy/10"
             >
               Get Started
@@ -447,7 +449,10 @@ export default function App() {
                   <a
                     key={link.name}
                     href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      window.dispatchEvent(new Event('closePreview'));
+                    }}
                     className="text-lg font-medium hover:text-teal"
                   >
                     {link.name}
@@ -455,7 +460,10 @@ export default function App() {
                 ))}
                 <a
                   href="#contact"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    window.dispatchEvent(new Event('closePreview'));
+                  }}
                   className="bg-navy text-white text-center py-3 rounded-xl font-semibold"
                 >
                   Contact Us
